@@ -26,3 +26,19 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+
+# 忽略钢材缺陷数据集
+yolo/datasets/
+# 忽略视频和压缩包
+*.mp4
+*.avi
+*.zip
+*.rar
+
+# 忽略 Python 编译产生的临时文件
+__pycache__/
+*.pyc
+
+# 忽略 C++ 编译产生的构建目录 (如果用到了 CMake)
+/build/

@@ -1,11 +1,11 @@
 from ultralytics import YOLO
 
-DATA_CONF_PATH = r"D:\projects\graduation_paper\yolo\datasets\severstal-steel-defect-detection.v1i.yolov11\data.yaml"
+DATA_CONF_PATH = r"D:\projects\graduation_paper\yolo\datasets\severstal-steel-defect-instance-segmentation.v4i.yolov11\data.yaml"
 EPOCHS = 200
 DEVICE = 0
 
 def main():
-    model = YOLO("yolo11s-seg.pt")
+    model = YOLO("yolo11n-seg.pt")
 
     model.train(
         data=DATA_CONF_PATH,
