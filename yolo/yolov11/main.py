@@ -1,44 +1,48 @@
 from ultralytics import YOLO
-import time
 
-DATA_CONF16_PATH =r"D:\projects\datasets\severstal-steel-defect-detection.v1i.yolov11\data.yaml"
-EPOCHS =200
-DEVICE =0
-BATCH =16
+DATA_CONF_PATH = r"D:\projects\datasets\severstal-steel-defect-detection.v1i.yolov11\data.yaml"
+EPOCHS = 200
+DEVICE = 0
 
-IMAGE_SIZE =640
+def main():
+    model = YOLO("yolo11s-seg.pt")
 
-CACHE = True
-AMP =True
-WORKERS =0
+    model.train(
+        data=DATA_CONF_PATH,
+        epochs=EPOCHS,
+        device=DEVICE,
 
-model=YOLO('yolo11n.pt')
+        imgsz=800,           # 原图长边就是 800，没必要再硬拉大
+        rect=True,           # 800x128 这类长条图建议开启
+        batch=0.70,          # AutoBatch，约使用 70% 显存
+        workers=2,           # Windows + 16G RAM 更稳
+        cache="disk",        # 比 cache=True 更稳，少吃内存
+        amp=True,
 
+        name="train_4060_balanced",
+        patience=50,
+        save=True,
 
-results=model.train(
-    data=DATA_CONF16_PATH,
-    epochs=EPOCHS,
-    device=DEVICE,
-    batch=BATCH,
-    name="train_optimized",
-    workers=WORKERS,
-    amp=AMP,
-    cache=CACHE,
+        optimizer="SGD",    # 避免 auto 覆盖你手动 lr0
+        lr0=0.01,
+        lrf=0.1,
+        cos_lr=True,
 
-    imgsz=IMAGE_SIZE,
-    patience=50,
-    save=True,
+        overlap_mask=True,
+        mask_ratio=4,
+        close_mosaic=10,
 
-    cos_lr=True,
-    retina_masks=True,
-    overlap_mask=True,
-    close_mosaic=10,
-    lr0=0.01,
-    lrf=0.1,
+        hsv_s=0.4,
+        hsv_v=0.3,
+        degrees=3.0,
+        translate=0.05,
+        scale=0.3,
+    )
 
-)
-print("训练完成")
-time.sleep(10)
+    print("训练完成")
+
+if __name__ == "__main__":
+    main()
 # from ultralytics import YOLO
 # import cv2
 
