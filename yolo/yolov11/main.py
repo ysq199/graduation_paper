@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-DATA_CONF_PATH = r"D:\projects\datasets\severstal-steel-defect-detection.v1i.yolov11\data.yaml"
+DATA_CONF_PATH = r"D:\projects\graduation_paper\yolo\datasets\severstal-steel-defect-detection.v1i.yolov11\data.yaml"
 EPOCHS = 200
 DEVICE = 0
 
