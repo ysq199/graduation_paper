@@ -5,7 +5,7 @@ EPOCHS = 200
 DEVICE = 0
 
 def main():
-    model = YOLO("yolo11s-seg.pt")
+    model = YOLO("yolov8s-seg.pt")
 
     model.train(
         data=DATA_CONF_PATH,
@@ -20,7 +20,7 @@ def main():
         cache="disk",        # 比 cache=True 更稳，少吃内存
         amp=True,
 
-        name="yolo11s-seg.pt",
+        name="yolo8s-seg_runs",
         patience=50,
         save=True,
 
