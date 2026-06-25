@@ -1,0 +1,202 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="第 1 页" id="3AzrkwPlf2GRiPaDUsK2">
+    <mxGraphModel dx="2864" dy="1213" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gdoNdXSxRTFOegNg70mt-112" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="gdoNdXSxRTFOegNg70mt-96" target="gdoNdXSxRTFOegNg70mt-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-72" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;" edge="1" parent="1" source="gdoNdXSxRTFOegNg70mt-111">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="10" y="200" as="targetPoint" />
+            <mxPoint x="10" y="130" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-69" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;" edge="1" parent="1" source="gdoNdXSxRTFOegNg70mt-43" target="gdoNdXSxRTFOegNg70mt-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-71" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-155" y="200" width="330" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-43" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-71">
+          <mxGeometry width="330" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-66" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-71" source="gdoNdXSxRTFOegNg70mt-2" target="gdoNdXSxRTFOegNg70mt-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-2" value="硬件平台搭建" style="rounded=0;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-71">
+          <mxGeometry x="95" y="20" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-68" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-71" source="gdoNdXSxRTFOegNg70mt-7" target="gdoNdXSxRTFOegNg70mt-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-7" value="双目视觉系统相机标定" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-71">
+          <mxGeometry x="79" y="100" width="172" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-41" value="系统构建与基础标定" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fontSize=14;fontStyle=1" vertex="1" parent="gdoNdXSxRTFOegNg70mt-71">
+          <mxGeometry x="35" y="70" width="26" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-44" value="相机标定精度验证" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-71">
+          <mxGeometry x="105" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-82" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="-155" y="500" width="335" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-49" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry width="335" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-12" value="视觉感知算法开发" style="whiteSpace=wrap;html=1;strokeColor=none;fontSize=14;fontStyle=1" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="7.5" y="190" width="20" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-15" value="深度学习方案：YOLOv8" style="whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-90" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-18" target="gdoNdXSxRTFOegNg70mt-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-18" value="传统方案：特征匹配" style="whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="197.5" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-19" value="构建自定义数据集" style="whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="203" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-87" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-24" target="gdoNdXSxRTFOegNg70mt-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-24" value="立体匹配与三位重建" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="453" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-26" value="目标位姿求解" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="536" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-50" value="目标检测与分割模块选型" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="86.5" y="30" width="167" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-86" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-23" target="gdoNdXSxRTFOegNg70mt-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-23" value="模型评估与部署" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-91" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-52" target="gdoNdXSxRTFOegNg70mt-53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-52" value="图像预处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="197.5" y="228" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-53" value="特征提取与匹配" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="197.5" y="335" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-85" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-73" target="gdoNdXSxRTFOegNg70mt-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-73" value="训练与优化模型" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-82">
+          <mxGeometry x="47.5" y="286" width="120" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-77" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-50" target="gdoNdXSxRTFOegNg70mt-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="185" y="230" as="sourcePoint" />
+            <mxPoint x="235" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-79" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-50" target="gdoNdXSxRTFOegNg70mt-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="185" y="170" as="sourcePoint" />
+            <mxPoint x="235" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-83" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-15" target="gdoNdXSxRTFOegNg70mt-19">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="225" y="130" as="sourcePoint" />
+            <mxPoint x="275" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-84" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-19" target="gdoNdXSxRTFOegNg70mt-73">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="125" y="270" as="sourcePoint" />
+            <mxPoint x="125" y="293" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-117" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-82" source="gdoNdXSxRTFOegNg70mt-53" target="gdoNdXSxRTFOegNg70mt-24">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="165" y="350" as="sourcePoint" />
+            <mxPoint x="215" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="258" y="483" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-93" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="280" y="200" width="240" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-55" value="" style="rounded=0;whiteSpace=wrap;html=1;movable=0;resizable=0;rotatable=0;deletable=0;editable=0;locked=1;connectable=0;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-93">
+          <mxGeometry width="240" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-56" value="机器人系统集成" style="whiteSpace=wrap;html=1;strokeColor=none;fontSize=14;fontStyle=1" vertex="1" parent="gdoNdXSxRTFOegNg70mt-93">
+          <mxGeometry x="30" y="35" width="20" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-94" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-93" source="gdoNdXSxRTFOegNg70mt-58" target="gdoNdXSxRTFOegNg70mt-60">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-58" value="机器人运动学建模" style="rounded=0;whiteSpace=wrap;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-93">
+          <mxGeometry x="60" y="19" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-95" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-93" source="gdoNdXSxRTFOegNg70mt-60" target="gdoNdXSxRTFOegNg70mt-61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-60" value="机器人手眼标定" style="whiteSpace=wrap;html=1;rounded=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-93">
+          <mxGeometry x="60" y="107" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-61" value="坐标转换与运动规划" style="whiteSpace=wrap;html=1;rounded=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-93">
+          <mxGeometry x="60" y="195" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-107" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=1.005;exitY=0.36;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;" edge="1" parent="1" source="gdoNdXSxRTFOegNg70mt-49" target="gdoNdXSxRTFOegNg70mt-55">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="720" as="sourcePoint" />
+            <mxPoint x="240" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-108" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;" edge="1" parent="1" source="gdoNdXSxRTFOegNg70mt-55" target="gdoNdXSxRTFOegNg70mt-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-110" value="1.完整的软硬件集成系统&lt;div&gt;2.优化过的系统参数与算法&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="320" y="910" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-111" value="前期技术调研" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-50" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-114" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="280" y="500" width="240" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-96" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry width="240" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-114" source="gdoNdXSxRTFOegNg70mt-36" target="gdoNdXSxRTFOegNg70mt-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-36" value="软件系统集成开发" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry x="60" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="gdoNdXSxRTFOegNg70mt-114" source="gdoNdXSxRTFOegNg70mt-38" target="gdoNdXSxRTFOegNg70mt-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-38" value="设计对比实验" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry x="60" y="98" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-109" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="gdoNdXSxRTFOegNg70mt-114" source="gdoNdXSxRTFOegNg70mt-39" target="gdoNdXSxRTFOegNg70mt-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-39" value="执行实验并采集数据" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry x="60" y="177" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-40" value="性能评估与分析" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry x="60" y="255" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gdoNdXSxRTFOegNg70mt-105" value="系统集成与实验验证" style="whiteSpace=wrap;html=1;strokeColor=none;fontSize=14;fontStyle=1" vertex="1" parent="gdoNdXSxRTFOegNg70mt-114">
+          <mxGeometry x="21" y="75" width="20" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
