@@ -5,12 +5,13 @@ EPOCHS = 200
 DEVICE = 0
 
 def main():
-    model = YOLO("yolo11n-seg.pt")
+    model = YOLO("yolo11s-seg.pt")
 
     model.train(
         data=DATA_CONF_PATH,
         epochs=EPOCHS,
         device=DEVICE,
+
 
         imgsz=800,           # 原图长边就是 800，没必要再硬拉大
         rect=True,           # 800x128 这类长条图建议开启
@@ -19,7 +20,7 @@ def main():
         cache="disk",        # 比 cache=True 更稳，少吃内存
         amp=True,
 
-        name="train_4060_balanced",
+        name="yolo11s-seg.pt",
         patience=50,
         save=True,
 
