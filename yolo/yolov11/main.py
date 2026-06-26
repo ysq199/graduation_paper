@@ -3,9 +3,11 @@ from ultralytics import YOLO
 DATA_CONF_PATH = r"D:\projects\graduation_paper\yolo\datasets\severstal-steel-defect-instance-segmentation.v4i.yolov11\data.yaml"
 EPOCHS = 200
 DEVICE = 0
-
+MODEL_CFG = r"yolo11-seg-p2.yaml"   # P2 分支模型配置
+PRETRAINED = "yolo11s-seg.pt"               # 用官方 seg 预训练权重初始化
 def main():
-    model = YOLO("yolov8s-seg.pt")
+    # 从 YAML 创建模型结构，加载预训练权重
+    model = YOLO(MODEL_CFG).load(PRETRAINED)
 
     model.train(
         data=DATA_CONF_PATH,
@@ -20,7 +22,7 @@ def main():
         cache="disk",        # 比 cache=True 更稳，少吃内存
         amp=True,
 
-        name="yolo8s-seg_runs",
+        name="yolo11s-seg-p2_runs",
         patience=50,
         save=True,
 
