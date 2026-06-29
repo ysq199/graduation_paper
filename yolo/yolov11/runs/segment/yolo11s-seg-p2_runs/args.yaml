@@ -13,7 +13,7 @@ cache: disk
 device: '0'
 workers: 2
 project: null
-name: yolo11s-seg-p2_runs
+name: yolo11s-seg-p2_runs2
 exist_ok: false
 pretrained: yolo11s-seg.pt
 optimizer: SGD
@@ -106,4 +106,4 @@ auto_augment: randaugment
 erasing: 0.4
 cfg: null
 tracker: botsort.yaml
-save_dir: D:\projects\graduation_paper\yolo\yolov11\runs\segment\yolo11s-seg-p2_runs
+save_dir: D:\projects\graduation_paper\yolo\yolov11\runs\segment\yolo11s-seg-p2_runs2
