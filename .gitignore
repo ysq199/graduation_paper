@@ -30,6 +30,7 @@ Thumbs.db
 
 # 忽略钢材缺陷数据集
 yolo/datasets/
+document_literature/
 
 thesis/
 # 忽略视频和压缩包
