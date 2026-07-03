@@ -9,8 +9,9 @@ from typing import Any
 
 YOLOV11_DIR = Path(__file__).resolve().parent
 YOLO_ROOT = YOLOV11_DIR.parent
+
 DEFAULT_DATA = YOLO_ROOT / "datasets" / "severstal-steel-defect-instance-segmentation.v4i.yolov11" / "data.yaml"
-DEFAULT_PRETRAINED = YOLOV11_DIR / "yolo11n-seg.pt"
+DEFAULT_PRETRAINED = YOLOV11_DIR / "11n_best.pt"
 DEFAULT_PROJECT = YOLOV11_DIR / "runs" / "segment"
 
 BASE_TRAIN_ARGS: dict[str, Any] = {
