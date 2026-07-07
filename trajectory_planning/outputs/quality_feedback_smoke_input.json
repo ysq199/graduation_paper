@@ -1,0 +1,32 @@
+[
+  {
+    "region_id": "tip_01",
+    "sharpness": 0.70,
+    "overexposed_ratio": 0.02,
+    "roi_coverage": 0.91,
+    "detector_instability": 0.10,
+    "retake_attempts": 0
+  },
+  {
+    "region_id": "damper_fillet_02",
+    "sharpness": 0.60,
+    "overexposed_ratio": 0.03,
+    "roi_coverage": 0.40,
+    "self_occluded": true,
+    "retake_attempts": 1
+  },
+  {
+    "region_id": "pressure_gap_03",
+    "sharpness": 0.62,
+    "overexposed_ratio": 0.01,
+    "roi_coverage": 0.72,
+    "retake_attempts": 0
+  },
+  {
+    "region_id": "edge_blur_04",
+    "sharpness": 0.20,
+    "overexposed_ratio": 0.01,
+    "roi_coverage": 0.88,
+    "retake_attempts": 2
+  }
+]

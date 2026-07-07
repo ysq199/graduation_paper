@@ -1,0 +1,43 @@
+{
+  "baseline": "maskable_ppo",
+  "input_candidate_count": 160,
+  "surface_point_count": 5000,
+  "selected_view_count": 80,
+  "coverage_ratio": 0.6844,
+  "weighted_coverage_ratio": 0.7099377251945052,
+  "target_coverage": 0.85,
+  "total_reward": 2.519369370018775,
+  "terminated": false,
+  "truncated": true,
+  "path_cost_before_2opt": 2608.727007176252,
+  "path_cost_after_2opt": 1001.2987748805281,
+  "path_cost_reduction": 1607.4282322957238,
+  "region_counts": {
+    "boundary_high_curvature": 14,
+    "boundary": 24,
+    "surface": 31,
+    "high_curvature": 11
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 80,
+    "min_new_coverage": 0.0002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 5000,
+    "two_opt_iterations": 20,
+    "seed": 17
+  },
+  "reward_config": {
+    "gain_scale": 10.0,
+    "motion_scale": 0.35,
+    "step_penalty": 0.005,
+    "target_bonus": 3.0,
+    "final_coverage_scale": 2.0,
+    "local_jump_threshold": 0.55,
+    "local_jump_scale": 2.0
+  }
+}

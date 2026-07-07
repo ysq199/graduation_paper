@@ -1,0 +1,105 @@
+{
+  "baseline": "genetic_algorithm",
+  "input_candidate_count": 160,
+  "surface_point_count": 5000,
+  "selected_view_count": 80,
+  "coverage_ratio": 0.7566,
+  "weighted_coverage_ratio": 0.7804454591994142,
+  "target_coverage": 0.85,
+  "fitness": 0.7712087666198826,
+  "path_cost_before_2opt": 2090.8382455341275,
+  "path_cost_after_2opt": 1189.7652505845274,
+  "path_cost_reduction": 901.0729949496001,
+  "region_counts": {
+    "boundary_high_curvature": 9,
+    "high_curvature": 19,
+    "surface": 34,
+    "boundary": 18
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 80,
+    "min_new_coverage": 0.0002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 5000,
+    "two_opt_iterations": 20,
+    "seed": 17
+  },
+  "genetic_config": {
+    "population_size": 80,
+    "generations": 120,
+    "tournament_size": 4,
+    "elite_count": 4,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.25,
+    "path_weight": 0.1,
+    "target_coverage_bonus": 0.15,
+    "seed": 23
+  },
+  "trace_tail": [
+    {
+      "generation": 110.0,
+      "best_fitness": 0.7616696992377667,
+      "best_weighted_coverage": 0.7779328650404735,
+      "best_path_cost": 2094.8352854606196
+    },
+    {
+      "generation": 111.0,
+      "best_fitness": 0.7619065961447381,
+      "best_weighted_coverage": 0.7779328650404735,
+      "best_path_cost": 2064.3209313821826
+    },
+    {
+      "generation": 112.0,
+      "best_fitness": 0.7619065961447381,
+      "best_weighted_coverage": 0.7779328650404735,
+      "best_path_cost": 2064.3209313821826
+    },
+    {
+      "generation": 113.0,
+      "best_fitness": 0.7619065961447381,
+      "best_weighted_coverage": 0.7779328650404735,
+      "best_path_cost": 2064.3209313821826
+    },
+    {
+      "generation": 114.0,
+      "best_fitness": 0.7622538308854263,
+      "best_weighted_coverage": 0.7791151383210272,
+      "best_path_cost": 2171.881059542381
+    },
+    {
+      "generation": 115.0,
+      "best_fitness": 0.7622538308854263,
+      "best_weighted_coverage": 0.7791151383210272,
+      "best_path_cost": 2171.881059542381
+    },
+    {
+      "generation": 116.0,
+      "best_fitness": 0.7624185088819169,
+      "best_weighted_coverage": 0.7796123681315827,
+      "best_path_cost": 2214.716586327168
+    },
+    {
+      "generation": 117.0,
+      "best_fitness": 0.7627121181370116,
+      "best_weighted_coverage": 0.7792631859188605,
+      "best_path_cost": 2131.919530433411
+    },
+    {
+      "generation": 118.0,
+      "best_fitness": 0.763481433267226,
+      "best_weighted_coverage": 0.7792631859188605,
+      "best_path_cost": 2032.825141311238
+    },
+    {
+      "generation": 119.0,
+      "best_fitness": 0.764213324248391,
+      "best_weighted_coverage": 0.7804454591994142,
+      "best_path_cost": 2090.8382455341275
+    }
+  ]
+}

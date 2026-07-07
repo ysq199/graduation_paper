@@ -1,0 +1,30 @@
+[
+  {
+    "region_id": "tip_01",
+    "action": "none",
+    "reason": "quality_satisfied",
+    "should_continue_task": true,
+    "mark_uninspectable": false
+  },
+  {
+    "region_id": "damper_fillet_02",
+    "action": "mark_uninspectable",
+    "reason": "self_occluded_from_all_reachable_views",
+    "should_continue_task": true,
+    "mark_uninspectable": true
+  },
+  {
+    "region_id": "pressure_gap_03",
+    "action": "generate_gap_viewpoint",
+    "reason": "roi_coverage_gap",
+    "should_continue_task": true,
+    "mark_uninspectable": false
+  },
+  {
+    "region_id": "edge_blur_04",
+    "action": "adjust_distance",
+    "reason": "defocus_or_depth_of_field_issue",
+    "should_continue_task": true,
+    "mark_uninspectable": false
+  }
+]

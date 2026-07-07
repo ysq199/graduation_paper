@@ -1,0 +1,32 @@
+{
+  "input_point_count": 50000,
+  "candidate_mask_count": 50000,
+  "selected_view_count": 160,
+  "region_counts": {
+    "boundary_high_curvature": 48,
+    "boundary": 32,
+    "high_curvature": 32,
+    "surface": 48
+  },
+  "fov": {
+    "footprint_width": 20.82268202206985,
+    "footprint_height": 14.558809370648094,
+    "effective_radius": 4.73161304546063
+  },
+  "config": {
+    "working_distance": 20.0,
+    "hfov_deg": 55.0,
+    "vfov_deg": 40.0,
+    "overlap_ratio": 0.35,
+    "max_views": 160,
+    "curvature_percentile": 75.0,
+    "min_spacing_scale": 0.45,
+    "max_spacing_scale": 1.15,
+    "curvature_weight": 0.45,
+    "boundary_weight": 0.35,
+    "sparsity_weight": 0.2,
+    "normal_orientation": "away_from_centroid",
+    "candidate_filter": "all",
+    "sampling_strategy": "stratified"
+  }
+}

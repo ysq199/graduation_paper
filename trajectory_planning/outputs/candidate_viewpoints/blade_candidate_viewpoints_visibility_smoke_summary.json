@@ -1,0 +1,11 @@
+{
+  "input_candidate_count": 160,
+  "visible_candidate_count": 117,
+  "occluded_candidate_count": 43,
+  "visible_ratio": 0.73125,
+  "config": {
+    "target_clearance_ratio": 0.0001,
+    "ray_epsilon": 1e-09,
+    "visible_threshold": 0.5
+  }
+}

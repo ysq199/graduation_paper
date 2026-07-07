@@ -1,0 +1,53 @@
+{
+  "baseline": "maskable_ppo",
+  "input_candidate_count": 160,
+  "surface_point_count": 50000,
+  "selected_view_count": 80,
+  "coverage_ratio": 0.66492,
+  "weighted_coverage_ratio": 0.6980095867227757,
+  "target_coverage": 0.85,
+  "total_reward": 6.271369375913116,
+  "terminated": false,
+  "truncated": true,
+  "path_cost_before_2opt": 4440.354279564943,
+  "path_cost_after_2opt": 1176.4333425178304,
+  "path_cost_reduction": 3263.9209370471126,
+  "region_counts": {
+    "high_curvature": 17,
+    "surface": 28,
+    "boundary_high_curvature": 17,
+    "boundary": 18
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 80,
+    "min_new_coverage": 0.002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 50000,
+    "two_opt_iterations": 50,
+    "seed": 17
+  },
+  "reward_config": {
+    "gain_scale": 10.0,
+    "motion_scale": 0.35,
+    "step_penalty": 0.005,
+    "target_bonus": 3.0,
+    "final_coverage_scale": 2.0,
+    "local_jump_threshold": 0.35,
+    "local_jump_scale": 0.0,
+    "smoothness_scale": 0.0,
+    "region_switch_scale": 0.0,
+    "intermediate_reward_scale": 0.1,
+    "terminal_coverage_scale": 8.0,
+    "terminal_path_scale": 2.0,
+    "terminal_shot_scale": 0.0,
+    "expert_prior_scale": 0.05,
+    "expert_next_scale": 0.05
+  },
+  "expert_route_count": 80,
+  "expert_route_csv": "E:\\graduation_paper\\trajectory_planning\\outputs\\selected_viewpath\\blade_selected_viewpath_ilp_tsp_5k.csv"
+}

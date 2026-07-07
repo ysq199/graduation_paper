@@ -1,0 +1,46 @@
+{
+  "baseline": "ilp_tsp",
+  "input_candidate_count": 160,
+  "surface_point_count": 5000,
+  "selected_view_count": 80,
+  "coverage_ratio": 0.774,
+  "weighted_coverage_ratio": 0.7982249554001593,
+  "target_coverage": 0.85,
+  "path_cost_before_2opt": 1276.6133281076925,
+  "path_cost_after_2opt": 1173.5145013042932,
+  "path_cost_reduction": 103.09882680339933,
+  "region_counts": {
+    "boundary_high_curvature": 12,
+    "high_curvature": 18,
+    "surface": 34,
+    "boundary": 16
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 80,
+    "min_new_coverage": 0.0002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 5000,
+    "two_opt_iterations": 20,
+    "seed": 17
+  },
+  "ilp_config": {
+    "time_limit": 300.0,
+    "mip_rel_gap": 0.005,
+    "shot_penalty": 1e-06,
+    "seed": 31
+  },
+  "ilp_summary": {
+    "solver_success": true,
+    "solver_status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "objective_value": -0.7981449554001593,
+    "selected_by_ilp": 80,
+    "mip_gap": 0.0,
+    "mip_node_count": 1
+  }
+}

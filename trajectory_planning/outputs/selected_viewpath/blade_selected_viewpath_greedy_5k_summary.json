@@ -1,0 +1,34 @@
+{
+  "baseline": "greedy_env",
+  "input_candidate_count": 160,
+  "surface_point_count": 5000,
+  "selected_view_count": 80,
+  "coverage_ratio": 0.685,
+  "weighted_coverage_ratio": 0.7035969214942044,
+  "target_coverage": 0.85,
+  "total_reward": 0.061951680351100824,
+  "terminated": false,
+  "truncated": true,
+  "path_cost_before_2opt": 871.8292411823369,
+  "path_cost_after_2opt": 770.9113406559369,
+  "path_cost_reduction": 100.91790052639999,
+  "region_counts": {
+    "boundary_high_curvature": 13,
+    "boundary": 21,
+    "surface": 33,
+    "high_curvature": 13
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 80,
+    "min_new_coverage": 0.0002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 5000,
+    "two_opt_iterations": 20,
+    "seed": 17
+  }
+}

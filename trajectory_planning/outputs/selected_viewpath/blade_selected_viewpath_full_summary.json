@@ -1,0 +1,30 @@
+{
+  "input_candidate_count": 160,
+  "surface_point_count": 50000,
+  "selected_view_count": 134,
+  "coverage_ratio": 0.8421,
+  "weighted_coverage_ratio": 0.8618507266489132,
+  "target_coverage": 0.95,
+  "path_cost_before_2opt": 1798.6695886017421,
+  "path_cost_after_2opt": 1551.266998026501,
+  "path_cost_reduction": 247.40259057524122,
+  "region_counts": {
+    "boundary_high_curvature": 23,
+    "surface": 48,
+    "boundary": 32,
+    "high_curvature": 31
+  },
+  "config": {
+    "target_coverage": 0.95,
+    "max_selected": 160,
+    "min_new_coverage": 5e-05,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 50000,
+    "two_opt_iterations": 20,
+    "seed": 17
+  }
+}

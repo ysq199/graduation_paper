@@ -1,4 +1,4 @@
-"""Run four no-module YOLO11n-seg tuning experiments."""
+"""Run three 800-based no-module YOLO11n-seg tuning experiments."""
 
 from __future__ import annotations
 
@@ -9,16 +9,15 @@ from typing import Any
 
 YOLOV11_DIR = Path(__file__).resolve().parent
 YOLO_ROOT = YOLOV11_DIR.parent
-
 DEFAULT_DATA = YOLO_ROOT / "datasets" / "severstal-steel-defect-instance-segmentation.v4i.yolov11" / "data.yaml"
-DEFAULT_PRETRAINED = YOLOV11_DIR / "11n_best.pt"
+DEFAULT_PRETRAINED = YOLOV11_DIR / "yolo11n-seg.pt"
 DEFAULT_PROJECT = YOLOV11_DIR / "runs" / "segment"
 
 BASE_TRAIN_ARGS: dict[str, Any] = {
     "epochs": 200,
     "device": 0,
-    "imgsz": 640,
-    "rect": False,
+    "imgsz": 800,
+    "rect": True,
     "batch": 0.70,
     "workers": 2,
     "cache": "disk",
@@ -44,27 +43,16 @@ BASE_TRAIN_ARGS: dict[str, Any] = {
 }
 
 EXPERIMENTS: list[tuple[str, dict[str, Any]]] = [
-    ("baseline640", {}),
+    ("baseline800_rect", {}),
     (
-        "adamw640",
-        {
-            "optimizer": "AdamW",
-            "lr0": 0.001,
-            "lrf": 0.01,
-        },
-    ),
-    (
-        "mask2_640",
+        "mask2_800_rect",
         {
             "mask_ratio": 2,
         },
     ),
     (
-        "combo_softaug",
+        "mask2_800_softaug",
         {
-            "optimizer": "AdamW",
-            "lr0": 0.001,
-            "lrf": 0.01,
             "mask_ratio": 2,
             "mosaic": 0.5,
             "close_mosaic": 20,
@@ -101,7 +89,7 @@ def train_mode(mode: str, overrides: dict[str, Any], data: str, pretrained: str)
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run four YOLO11n-seg no-module tuning experiments")
+    parser = argparse.ArgumentParser(description="Run three 800-based YOLO11n-seg no-module tuning experiments")
     parser.add_argument("--data", default=os.environ.get("YOLO_DATA", str(DEFAULT_DATA)))
     parser.add_argument(
         "--pretrained",

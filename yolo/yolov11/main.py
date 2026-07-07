@@ -6,7 +6,7 @@ DEVICE = 0
 
 def main():
     # 从 YAML 创建模型结构，加载预训练权重
-    model = YOLO("yolopavv8n-seg.pt")
+    model = YOLO("yolo11n-seg.pt")
 
     model.train(
         data=DATA_CONF_PATH,
@@ -21,7 +21,7 @@ def main():
         cache="disk",        # 比 cache=True 更稳，少吃内存
         amp=True,
 
-        name="yolov8n-seg_runs",
+        name="yolo11n-seg_runs",
         patience=50,
         save=True,
 

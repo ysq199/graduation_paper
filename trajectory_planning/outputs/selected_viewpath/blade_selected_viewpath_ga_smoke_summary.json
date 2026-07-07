@@ -1,0 +1,68 @@
+{
+  "baseline": "genetic_algorithm",
+  "input_candidate_count": 160,
+  "surface_point_count": 1000,
+  "selected_view_count": 20,
+  "coverage_ratio": 0.259,
+  "weighted_coverage_ratio": 0.3219882180260927,
+  "target_coverage": 0.85,
+  "fitness": 0.3147840635045196,
+  "path_cost_before_2opt": 245.1316633644455,
+  "path_cost_after_2opt": 223.1795101272455,
+  "path_cost_reduction": 21.952153237200008,
+  "region_counts": {
+    "boundary_high_curvature": 9,
+    "surface": 4,
+    "boundary": 7
+  },
+  "config": {
+    "target_coverage": 0.85,
+    "max_selected": 20,
+    "min_new_coverage": 0.0002,
+    "motion_weight": 0.12,
+    "orientation_weight": 2.0,
+    "curvature_weight": 1.0,
+    "boundary_weight": 1.0,
+    "roughness_weight": 0.2,
+    "max_surface_points": 1000,
+    "two_opt_iterations": 5,
+    "seed": 17
+  },
+  "genetic_config": {
+    "population_size": 12,
+    "generations": 4,
+    "tournament_size": 4,
+    "elite_count": 4,
+    "crossover_rate": 0.85,
+    "mutation_rate": 0.25,
+    "path_weight": 0.1,
+    "target_coverage_bonus": 0.15,
+    "seed": 23
+  },
+  "trace_tail": [
+    {
+      "generation": 0.0,
+      "best_fitness": 0.30401045908650415,
+      "best_weighted_coverage": 0.31086392522001366,
+      "best_path_cost": 212.31543684550698
+    },
+    {
+      "generation": 1.0,
+      "best_fitness": 0.30401045908650415,
+      "best_weighted_coverage": 0.31086392522001366,
+      "best_path_cost": 212.31543684550698
+    },
+    {
+      "generation": 2.0,
+      "best_fitness": 0.3140754558733268,
+      "best_weighted_coverage": 0.3219882180260927,
+      "best_path_cost": 245.1316633644455
+    },
+    {
+      "generation": 3.0,
+      "best_fitness": 0.3140754558733268,
+      "best_weighted_coverage": 0.3219882180260927,
+      "best_path_cost": 245.1316633644455
+    }
+  ]
+}

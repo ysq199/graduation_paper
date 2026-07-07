@@ -1,0 +1,81 @@
+{
+  "inputs": {
+    "image_mask": "E:\\graduation_paper\\trajectory_planning\\outputs\\roi_feature_demo\\demo_roi_mask.png",
+    "point_cloud": "E:\\graduation_paper\\trajectory_planning\\outputs\\roi_feature_demo\\demo_surface_cloud.csv"
+  },
+  "results": [
+    {
+      "type": "contour_roi",
+      "features": {
+        "area_px": 23942,
+        "perimeter_px": 4775.554482963539,
+        "centroid_xy": [
+          189.74855901762592,
+          107.81371648149695
+        ],
+        "bbox_xyxy": [
+          59,
+          46,
+          322,
+          178
+        ],
+        "compactness": 0.013192365713506715,
+        "aspect_ratio": 1.9849624060150375,
+        "orientation_deg": 174.2481435558787,
+        "major_axis_px": 283.2698396663322,
+        "minor_axis_px": 117.66724161620317,
+        "mean_curvature": 0.12004214223808715,
+        "max_curvature": 1.7804439026938337,
+        "contour_points": 846
+      }
+    },
+    {
+      "type": "surface_roi",
+      "features": {
+        "point_count": 1440,
+        "bbox_min_xyz": [
+          -1.0,
+          -0.38,
+          -0.1684476
+        ],
+        "bbox_max_xyz": [
+          1.0,
+          0.38,
+          0.1805514
+        ],
+        "centroid_xyz": [
+          2.4671622769447924e-18,
+          -7.709882115452476e-20,
+          0.0045375949305554745
+        ],
+        "principal_axes": [
+          [
+            -0.9795171380215346,
+            -8.529094137621485e-07,
+            -0.20136081128505254
+          ],
+          [
+            -5.843449813709492e-06,
+            0.9999999996903571,
+            2.4189661300577647e-05
+          ],
+          [
+            0.20136081120207103,
+            2.487082960200837e-05,
+            -0.979517137723218
+          ]
+        ],
+        "axis_lengths": [
+          2.3979942344280167,
+          0.9152503245394015,
+          0.1347020715177462
+        ],
+        "mean_curvature": 0.0016671752011960762,
+        "max_curvature": 0.00410929586898571,
+        "mean_roughness": 0.002757325582217596,
+        "boundary_candidate_count": 144,
+        "k_neighbors": 24
+      }
+    }
+  ]
+}
