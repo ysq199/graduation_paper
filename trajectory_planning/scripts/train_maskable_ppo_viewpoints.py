@@ -45,6 +45,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expert-route-csv", type=Path, help="Optional selected-viewpath CSV used as a structural expert route prior.")
     parser.add_argument("--reward-expert-prior-scale", type=float, default=0.0, help="Small reward for selecting viewpoints that appear in the expert route.")
     parser.add_argument("--reward-expert-next-scale", type=float, default=0.0, help="Small reward for following the next unvisited segment of the expert route.")
+    parser.add_argument("--reward-expert-edge-scale", type=float, default=0.0, help="Small reward for taking a candidate edge close to the expert route's next local edge.")
+    parser.add_argument("--reward-expert-edge-jump-scale", type=float, default=0.0, help="Penalty scale for large forward or backward jumps along the expert route order.")
+    parser.add_argument("--reward-expert-edge-bandwidth", type=float, default=3.0, help="Rank-distance bandwidth used by expert edge locality features.")
     parser.add_argument("--target-coverage", type=float, default=0.85, help="Target weighted surface coverage ratio.")
     parser.add_argument("--max-selected", type=int, default=80, help="Maximum selected viewpoints.")
     parser.add_argument("--min-new-coverage", type=float, default=0.002, help="Stop if best marginal coverage is below this.")
@@ -133,6 +136,9 @@ def main() -> int:
         terminal_shot_scale=args.reward_terminal_shot_scale,
         expert_prior_scale=args.reward_expert_prior_scale,
         expert_next_scale=args.reward_expert_next_scale,
+        expert_edge_scale=args.reward_expert_edge_scale,
+        expert_edge_jump_scale=args.reward_expert_edge_jump_scale,
+        expert_edge_bandwidth=args.reward_expert_edge_bandwidth,
     )
     expert_order = load_expert_order(args.expert_route_csv, candidates)
     env = MaskablePPOViewpointEnv(candidates, point_features, config, reward_config, expert_order=expert_order)

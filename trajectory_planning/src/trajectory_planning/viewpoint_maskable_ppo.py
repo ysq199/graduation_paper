@@ -47,6 +47,9 @@ class PPORewardConfig:
     terminal_shot_scale: float = 0.0
     expert_prior_scale: float = 0.0
     expert_next_scale: float = 0.0
+    expert_edge_scale: float = 0.0
+    expert_edge_jump_scale: float = 0.0
+    expert_edge_bandwidth: float = 3.0
 
 
 class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
@@ -77,7 +80,7 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         for rank, candidate_index in enumerate(self.expert_order):
             self.expert_rank[candidate_index] = rank
         self.action_space = spaces.Discrete(len(candidates))
-        self.features_per_candidate = 12
+        self.features_per_candidate = 14
         self.global_feature_count = 7
         self.observation_space = spaces.Box(
             low=0.0,
@@ -96,11 +99,15 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         region_switch_penalty = self._region_switch_penalty(int(action))
         expert_membership = self._expert_membership_feature(int(action))
         expert_next_score = self._expert_next_score(int(action))
+        expert_edge_score = self._expert_edge_score(int(action))
+        expert_edge_jump = self._expert_edge_jump_feature(int(action))
         _, _, terminated, truncated, info = self.core.step(int(action))
         info["turn_penalty"] = float(turn_penalty)
         info["region_switch_penalty_raw"] = float(region_switch_penalty)
         info["expert_membership"] = float(expert_membership)
         info["expert_next_score"] = float(expert_next_score)
+        info["expert_edge_score"] = float(expert_edge_score)
+        info["expert_edge_jump"] = float(expert_edge_jump)
         reward = self._shaped_reward(info, terminated, truncated)
         info["shaped_reward"] = float(reward)
         return self._flat_observation(), reward, terminated, truncated, info
@@ -151,6 +158,8 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
             expert_membership = self._expert_membership_feature(idx)
             expert_order_progress = self._expert_order_progress_feature(idx)
             expert_next_score = self._expert_next_score(idx)
+            expert_edge_score = self._expert_edge_score(idx)
+            expert_edge_jump = self._expert_edge_jump_feature(idx)
             candidate_features.extend(
                 [
                     is_available,
@@ -165,6 +174,8 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
                     expert_membership,
                     expert_order_progress,
                     expert_next_score,
+                    expert_edge_score,
+                    expert_edge_jump,
                 ]
             )
 
@@ -185,6 +196,8 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         region_switch_penalty = self.reward_config.region_switch_scale * float(info["region_switch_penalty_raw"])
         expert_prior_reward = self.reward_config.expert_prior_scale * float(info["expert_membership"])
         expert_next_reward = self.reward_config.expert_next_scale * float(info["expert_next_score"])
+        expert_edge_reward = self.reward_config.expert_edge_scale * float(info["expert_edge_score"])
+        expert_edge_jump_penalty = self.reward_config.expert_edge_jump_scale * float(info["expert_edge_jump"])
         intermediate_reward = (
             self.reward_config.gain_scale * float(info["marginal_weighted_gain"])
             - self.reward_config.motion_scale * motion_penalty
@@ -194,6 +207,8 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
             - self.reward_config.step_penalty
             + expert_prior_reward
             + expert_next_reward
+            + expert_edge_reward
+            - expert_edge_jump_penalty
         )
         reward = self.reward_config.intermediate_reward_scale * intermediate_reward
         info["local_jump_penalty"] = float(local_jump_penalty)
@@ -201,6 +216,8 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         info["region_switch_penalty"] = float(region_switch_penalty)
         info["expert_prior_reward"] = float(expert_prior_reward)
         info["expert_next_reward"] = float(expert_next_reward)
+        info["expert_edge_reward"] = float(expert_edge_reward)
+        info["expert_edge_jump_penalty"] = float(expert_edge_jump_penalty)
         terminal_objective = 0.0
         if terminated or truncated:
             terminal_objective = self._terminal_objective()
@@ -322,6 +339,53 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         rank_distance = abs(float(rank - next_rank))
         return float(np.exp(-rank_distance / 3.0))
 
+    def _expert_edge_score(self, candidate_index: int) -> float:
+        if len(self.expert_order) == 0:
+            return 0.0
+        candidate_rank = int(self.expert_rank[candidate_index])
+        if candidate_rank < 0:
+            return 0.0
+        current_rank = self._current_expert_rank()
+        if current_rank is None:
+            return self._expert_next_score(candidate_index)
+        next_rank = self._next_unselected_expert_rank_after(current_rank)
+        if next_rank is None or candidate_rank <= current_rank:
+            return 0.0
+        bandwidth = max(float(self.reward_config.expert_edge_bandwidth), 1e-6)
+        rank_distance = abs(float(candidate_rank - next_rank))
+        return float(np.exp(-rank_distance / bandwidth))
+
+    def _expert_edge_jump_feature(self, candidate_index: int) -> float:
+        if len(self.expert_order) == 0:
+            return 0.0
+        candidate_rank = int(self.expert_rank[candidate_index])
+        if candidate_rank < 0:
+            return 0.0
+        current_rank = self._current_expert_rank()
+        if current_rank is None:
+            return 0.0
+        next_rank = self._next_unselected_expert_rank_after(current_rank)
+        if next_rank is None:
+            return 0.0
+        if candidate_rank <= current_rank:
+            return 1.0
+        bandwidth = max(float(self.reward_config.expert_edge_bandwidth), 1e-6)
+        return float(min(abs(float(candidate_rank - next_rank)) / bandwidth, 1.0))
+
+    def _current_expert_rank(self) -> int | None:
+        if self.core.current_index is None:
+            return None
+        rank = int(self.expert_rank[self.core.current_index])
+        if rank < 0:
+            return None
+        return rank
+
+    def _next_unselected_expert_rank_after(self, current_rank: int) -> int | None:
+        for rank in range(current_rank + 1, len(self.expert_order)):
+            if self.expert_order[rank] in self.core.remaining:
+                return rank
+        return None
+
     def _next_unselected_expert_rank(self) -> int | None:
         for rank, candidate_index in enumerate(self.expert_order):
             if candidate_index in self.core.remaining:
@@ -372,5 +436,39 @@ def evaluate_maskable_model(
         "config": asdict(env.config),
         "reward_config": asdict(env.reward_config),
         "expert_route_count": int(len(env.expert_order)),
+        "expert_edge_summary": summarize_expert_edges(order, env),
     }
     return selected_rows, summary
+
+
+def summarize_expert_edges(order: list[int], env: MaskablePPOViewpointEnv) -> dict[str, float | int]:
+    expert_selected_count = sum(1 for idx in order if int(env.expert_rank[idx]) >= 0)
+    comparable_edges = 0
+    forward_edges = 0
+    local_forward_edges = 0
+    backward_edges = 0
+    rank_jumps: list[float] = []
+    bandwidth = max(float(env.reward_config.expert_edge_bandwidth), 1.0)
+    for previous, current in zip(order, order[1:]):
+        previous_rank = int(env.expert_rank[previous])
+        current_rank = int(env.expert_rank[current])
+        if previous_rank < 0 or current_rank < 0:
+            continue
+        comparable_edges += 1
+        rank_jump = float(current_rank - previous_rank)
+        rank_jumps.append(abs(rank_jump))
+        if rank_jump > 0:
+            forward_edges += 1
+            if rank_jump <= bandwidth:
+                local_forward_edges += 1
+        else:
+            backward_edges += 1
+    return {
+        "expert_selected_count": int(expert_selected_count),
+        "expert_selected_ratio": float(expert_selected_count / max(len(order), 1)),
+        "expert_comparable_edge_count": int(comparable_edges),
+        "expert_forward_edge_ratio": float(forward_edges / max(comparable_edges, 1)),
+        "expert_local_forward_edge_ratio": float(local_forward_edges / max(comparable_edges, 1)),
+        "expert_backward_edge_count": int(backward_edges),
+        "expert_mean_rank_jump": float(np.mean(rank_jumps)) if rank_jumps else 0.0,
+    }
