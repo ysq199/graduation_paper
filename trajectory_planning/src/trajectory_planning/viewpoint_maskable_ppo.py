@@ -50,6 +50,12 @@ class PPORewardConfig:
     expert_edge_scale: float = 0.0
     expert_edge_jump_scale: float = 0.0
     expert_edge_bandwidth: float = 3.0
+    expert_edge_mask_window: int = 0
+    expert_edge_mask_min_candidates: int = 4
+    expert_edge_mask_escape_ratio: float = 0.0
+    expert_edge_mask_escape_motion_weight: float = 0.0
+    expert_edge_mask_escape_max_motion: float = 1.0
+    expert_edge_mask_start_step: int = 0
 
 
 class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
@@ -79,8 +85,9 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         self.expert_rank = np.full(len(candidates), -1, dtype=np.int32)
         for rank, candidate_index in enumerate(self.expert_order):
             self.expert_rank[candidate_index] = rank
+        self._reset_mask_stats()
         self.action_space = spaces.Discrete(len(candidates))
-        self.features_per_candidate = 14
+        self.features_per_candidate = 15
         self.global_feature_count = 7
         self.observation_space = spaces.Box(
             low=0.0,
@@ -92,6 +99,7 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
     def reset(self, *, seed: int | None = None, options: dict[str, Any] | None = None) -> tuple[np.ndarray, dict[str, Any]]:
         super().reset(seed=seed)
         self.core.reset()
+        self._reset_mask_stats()
         return self._flat_observation(), self._info()
 
     def step(self, action: int) -> tuple[np.ndarray, float, bool, bool, dict[str, Any]]:
@@ -113,7 +121,7 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         return self._flat_observation(), reward, terminated, truncated, info
 
     def action_masks(self) -> np.ndarray:
-        return self.core.action_mask()
+        return self._structured_action_mask(self.core.action_mask(), record=True)
 
     @property
     def selected_order(self) -> list[int]:
@@ -144,8 +152,10 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
         ]
 
         candidate_features: list[float] = []
-        mask = self.core.action_mask()
+        base_mask = self.core.action_mask()
+        mask = self._structured_action_mask(base_mask)
         for idx, candidate in enumerate(self.candidates):
+            base_available = 1.0 if base_mask[idx] else 0.0
             is_available = 1.0 if mask[idx] else 0.0
             is_selected = 0.0 if idx in self.core.remaining else 1.0
             marginal_gain = min(max(self.core.marginal_weighted_gain(idx), 0.0), 1.0)
@@ -176,6 +186,7 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
                     expert_next_score,
                     expert_edge_score,
                     expert_edge_jump,
+                    base_available,
                 ]
             )
 
@@ -392,6 +403,138 @@ class MaskablePPOViewpointEnv(gym.Env if gym is not None else object):
                 return rank
         return None
 
+    def _structured_action_mask(self, base_mask: np.ndarray, record: bool = False) -> np.ndarray:
+        window = int(self.reward_config.expert_edge_mask_window)
+        if (
+            window <= 0
+            or len(self.expert_order) == 0
+            or self.core.step_count < int(self.reward_config.expert_edge_mask_start_step)
+        ):
+            if record:
+                self._record_mask_stats(base_mask, base_mask, active=False, fallback=False)
+            return base_mask
+        min_candidates = max(int(self.reward_config.expert_edge_mask_min_candidates), 1)
+        if int(base_mask.sum()) <= min_candidates:
+            if record:
+                self._record_mask_stats(base_mask, base_mask, active=False, fallback=True)
+            return base_mask
+
+        anchor_rank = self._expert_edge_mask_anchor_rank()
+        if anchor_rank is None:
+            if record:
+                self._record_mask_stats(base_mask, base_mask, active=False, fallback=True)
+            return base_mask
+
+        structured_mask = np.zeros_like(base_mask, dtype=bool)
+        end_rank = min(anchor_rank + max(window, 1), len(self.expert_order))
+        for rank in range(anchor_rank, end_rank):
+            candidate_index = self.expert_order[rank]
+            if base_mask[candidate_index]:
+                structured_mask[candidate_index] = True
+
+        escape_mask = self._coverage_escape_mask(base_mask)
+        guided_mask = base_mask & (structured_mask | escape_mask)
+        if int(guided_mask.sum()) < min_candidates:
+            top_up_mask = self._top_marginal_gain_mask(base_mask, min_candidates)
+            guided_mask = base_mask & (guided_mask | top_up_mask)
+        if not bool(guided_mask.any()):
+            if record:
+                self._record_mask_stats(base_mask, base_mask, active=False, fallback=True)
+            return base_mask
+        if record:
+            self._record_mask_stats(base_mask, guided_mask, active=True, fallback=False, escape_mask=escape_mask)
+        return guided_mask
+
+    def _reset_mask_stats(self) -> None:
+        self.mask_stats = {
+            "steps": 0,
+            "active_steps": 0,
+            "fallback_steps": 0,
+            "base_action_count_sum": 0,
+            "guided_action_count_sum": 0,
+            "escape_action_count_sum": 0,
+        }
+
+    def _record_mask_stats(
+        self,
+        base_mask: np.ndarray,
+        guided_mask: np.ndarray,
+        active: bool,
+        fallback: bool,
+        escape_mask: np.ndarray | None = None,
+    ) -> None:
+        self.mask_stats["steps"] += 1
+        self.mask_stats["base_action_count_sum"] += int(base_mask.sum())
+        self.mask_stats["guided_action_count_sum"] += int(guided_mask.sum())
+        if escape_mask is not None:
+            self.mask_stats["escape_action_count_sum"] += int(escape_mask.sum())
+        if active:
+            self.mask_stats["active_steps"] += 1
+        if fallback:
+            self.mask_stats["fallback_steps"] += 1
+
+    def mask_summary(self) -> dict[str, float | int]:
+        steps = max(int(self.mask_stats["steps"]), 1)
+        base_mean = float(self.mask_stats["base_action_count_sum"]) / float(steps)
+        guided_mean = float(self.mask_stats["guided_action_count_sum"]) / float(steps)
+        escape_mean = float(self.mask_stats["escape_action_count_sum"]) / float(steps)
+        return {
+            "mask_steps": int(self.mask_stats["steps"]),
+            "mask_active_steps": int(self.mask_stats["active_steps"]),
+            "mask_fallback_steps": int(self.mask_stats["fallback_steps"]),
+            "mask_base_action_count_mean": base_mean,
+            "mask_guided_action_count_mean": guided_mean,
+            "mask_escape_action_count_mean": escape_mean,
+            "mask_action_reduction_ratio": float(1.0 - guided_mean / max(base_mean, 1e-12)),
+        }
+
+    def _expert_edge_mask_anchor_rank(self) -> int | None:
+        current_rank = self._current_expert_rank()
+        if current_rank is None:
+            return self._next_unselected_expert_rank()
+        return self._next_unselected_expert_rank_after(current_rank)
+
+    def _coverage_escape_mask(self, base_mask: np.ndarray) -> np.ndarray:
+        escape_ratio = float(self.reward_config.expert_edge_mask_escape_ratio)
+        escape_mask = np.zeros_like(base_mask, dtype=bool)
+        if escape_ratio <= 0.0:
+            return escape_mask
+        available = np.flatnonzero(base_mask)
+        if len(available) == 0:
+            return escape_mask
+        scores = np.asarray([self._escape_score(int(idx)) for idx in available], dtype=float)
+        best_score = float(scores.max()) if len(scores) else 0.0
+        if best_score <= 0.0:
+            return escape_mask
+        max_motion = float(self.reward_config.expert_edge_mask_escape_max_motion)
+        for idx, score in zip(available, scores):
+            motion_cost = self.core.normalized_transition_cost(self.core.current_index, int(idx))
+            if motion_cost <= max_motion and float(score) >= escape_ratio * best_score:
+                escape_mask[int(idx)] = True
+        return escape_mask
+
+    def _escape_score(self, candidate_index: int) -> float:
+        gain = max(float(self.core.marginal_weighted_gain(candidate_index)), 0.0)
+        motion_weight = max(float(self.reward_config.expert_edge_mask_escape_motion_weight), 0.0)
+        if motion_weight <= 0.0:
+            return gain
+        motion_cost = self.core.normalized_transition_cost(self.core.current_index, candidate_index)
+        return float(gain / (1.0 + motion_weight * max(float(motion_cost), 0.0)))
+
+    def _top_marginal_gain_mask(self, base_mask: np.ndarray, count: int) -> np.ndarray:
+        top_mask = np.zeros_like(base_mask, dtype=bool)
+        available = np.flatnonzero(base_mask)
+        if len(available) == 0:
+            return top_mask
+        ranked = sorted(
+            (int(idx) for idx in available),
+            key=lambda idx: self._escape_score(idx),
+            reverse=True,
+        )
+        for idx in ranked[:count]:
+            top_mask[idx] = True
+        return top_mask
+
 
 def evaluate_maskable_model(
     model: Any,
@@ -437,6 +580,7 @@ def evaluate_maskable_model(
         "reward_config": asdict(env.reward_config),
         "expert_route_count": int(len(env.expert_order)),
         "expert_edge_summary": summarize_expert_edges(order, env),
+        "expert_mask_summary": env.mask_summary(),
     }
     return selected_rows, summary
 

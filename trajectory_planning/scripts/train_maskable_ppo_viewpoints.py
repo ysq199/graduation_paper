@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import shutil
 import sys
 from pathlib import Path
 
@@ -48,6 +49,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reward-expert-edge-scale", type=float, default=0.0, help="Small reward for taking a candidate edge close to the expert route's next local edge.")
     parser.add_argument("--reward-expert-edge-jump-scale", type=float, default=0.0, help="Penalty scale for large forward or backward jumps along the expert route order.")
     parser.add_argument("--reward-expert-edge-bandwidth", type=float, default=3.0, help="Rank-distance bandwidth used by expert edge locality features.")
+    parser.add_argument("--expert-edge-mask-window", type=int, default=0, help="Enable structured action masking by allowing this many expert-route successors near the next local edge.")
+    parser.add_argument("--expert-edge-mask-min-candidates", type=int, default=4, help="Minimum number of actions kept by structured expert-edge masking.")
+    parser.add_argument("--expert-edge-mask-escape-ratio", type=float, default=0.0, help="Allow nonlocal actions whose marginal gain is at least this ratio of the current best marginal gain.")
+    parser.add_argument("--expert-edge-mask-escape-motion-weight", type=float, default=0.0, help="Motion-cost weight used when scoring nonlocal coverage escape actions.")
+    parser.add_argument("--expert-edge-mask-escape-max-motion", type=float, default=1.0, help="Maximum normalized transition cost allowed for nonlocal coverage escape actions.")
+    parser.add_argument("--expert-edge-mask-start-step", type=int, default=0, help="Episode step from which structured expert-edge masking becomes active.")
     parser.add_argument("--target-coverage", type=float, default=0.85, help="Target weighted surface coverage ratio.")
     parser.add_argument("--max-selected", type=int, default=80, help="Maximum selected viewpoints.")
     parser.add_argument("--min-new-coverage", type=float, default=0.002, help="Stop if best marginal coverage is below this.")
@@ -60,6 +67,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--two-opt-iterations", type=int, default=50, help="2-opt path optimization iterations.")
     parser.add_argument("--seed", type=int, default=17, help="Random seed.")
     parser.add_argument("--no-two-opt", action="store_true", help="Keep raw policy rollout order without 2-opt shortening.")
+    parser.add_argument("--checkpoint-eval-interval", type=int, default=0, help="Train/evaluate checkpoints every N timesteps; disabled when 0.")
+    parser.add_argument("--checkpoint-output-dir", type=Path, help="Directory for checkpoint models, CSVs and JSON summaries.")
+    parser.add_argument("--checkpoint-prefix", type=str, help="Filename prefix for checkpoint artifacts.")
+    parser.add_argument("--checkpoint-score-path-weight", type=float, default=2.0, help="Weight for normalized 2-opt path cost in checkpoint score.")
+    parser.add_argument("--checkpoint-index-csv", type=Path, help="Optional CSV index of checkpoint evaluation results.")
+    parser.add_argument("--best-model-output", type=Path, help="Optional output path for the best checkpoint model zip.")
+    parser.add_argument("--best-output-csv", type=Path, help="Optional output CSV for the best checkpoint route.")
+    parser.add_argument("--best-output-json", type=Path, help="Optional output JSON for the best checkpoint summary.")
     return parser.parse_args()
 
 
@@ -87,6 +102,133 @@ def load_expert_order(path: Path | None, candidates: list[dict[str, object]]) ->
             expert_order.append(candidate_index)
             seen.add(candidate_index)
     return expert_order
+
+
+def add_checkpoint_score(
+    summary: dict[str, object],
+    env: object,
+    checkpoint_timesteps: int,
+    path_weight: float,
+    selected: bool = False,
+) -> None:
+    max_route = env.core.bbox_diag * max(float(env.config.max_selected - 1), 1.0)
+    normalized_path = float(summary["path_cost_after_2opt"]) / max(float(max_route), 1e-12)
+    score = float(summary["weighted_coverage_ratio"]) - float(path_weight) * normalized_path
+    summary["checkpoint_timesteps"] = int(checkpoint_timesteps)
+    summary["checkpoint_score_path_weight"] = float(path_weight)
+    summary["checkpoint_normalized_path_after_2opt"] = float(normalized_path)
+    summary["checkpoint_score"] = float(score)
+    summary["checkpoint_selected"] = bool(selected)
+
+
+def checkpoint_prefix(args: argparse.Namespace) -> str:
+    return args.checkpoint_prefix or args.model_output.stem
+
+
+def checkpoint_dir(args: argparse.Namespace) -> Path:
+    return args.checkpoint_output_dir or args.model_output.parent / f"{args.model_output.stem}_checkpoints"
+
+
+def checkpoint_paths(args: argparse.Namespace, timesteps: int) -> tuple[Path, Path, Path]:
+    prefix = checkpoint_prefix(args)
+    base_dir = checkpoint_dir(args)
+    return (
+        base_dir / "models" / f"{prefix}_{timesteps}.zip",
+        base_dir / "selected_viewpath" / f"{prefix}_{timesteps}.csv",
+        base_dir / "selected_viewpath" / f"{prefix}_{timesteps}_summary.json",
+    )
+
+
+def write_checkpoint_index(path: Path, summaries: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fields = [
+        "checkpoint_timesteps",
+        "checkpoint_score",
+        "weighted_coverage_ratio",
+        "path_cost_after_2opt",
+        "checkpoint_normalized_path_after_2opt",
+        "checkpoint_selected",
+        "checkpoint_model_path",
+        "checkpoint_summary_json",
+    ]
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        for summary in summaries:
+            writer.writerow({field: summary.get(field, "") for field in fields})
+
+
+def train_with_checkpoint_evaluation(
+    model: object,
+    env: object,
+    eval_env: object,
+    args: argparse.Namespace,
+    expert_route_csv: Path | None,
+    optimize_route: bool,
+    evaluate_maskable_model: object,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    interval = int(args.checkpoint_eval_interval)
+    if interval <= 0:
+        model.learn(total_timesteps=args.total_timesteps)
+        return evaluate_maskable_model(model, eval_env, optimize_route=optimize_route)
+
+    summaries: list[dict[str, object]] = []
+    best_rows: list[dict[str, object]] | None = None
+    best_summary: dict[str, object] | None = None
+    best_model_path: Path | None = None
+
+    while int(model.num_timesteps) < int(args.total_timesteps):
+        remaining = max(int(args.total_timesteps) - int(model.num_timesteps), 1)
+        chunk_steps = min(interval, remaining)
+        model.learn(total_timesteps=chunk_steps, reset_num_timesteps=(int(model.num_timesteps) == 0))
+        current_timesteps = int(model.num_timesteps)
+
+        model_path, csv_path, json_path = checkpoint_paths(args, current_timesteps)
+        model_path.parent.mkdir(parents=True, exist_ok=True)
+        model.save(model_path)
+
+        selected_rows, summary = evaluate_maskable_model(model, eval_env, optimize_route=optimize_route)
+        summary["expert_route_csv"] = "" if expert_route_csv is None else str(expert_route_csv)
+        add_checkpoint_score(summary, eval_env, current_timesteps, args.checkpoint_score_path_weight)
+        summary["checkpoint_model_path"] = str(model_path)
+        summary["checkpoint_summary_json"] = str(json_path)
+        write_selected_viewpoints_csv(csv_path, selected_rows)
+        write_summary_json(json_path, summary)
+        summaries.append(summary)
+
+        if best_summary is None or float(summary["checkpoint_score"]) > float(best_summary["checkpoint_score"]):
+            best_rows = selected_rows
+            best_summary = dict(summary)
+            best_model_path = model_path
+
+        print(
+            "checkpoint="
+            f"{current_timesteps} weighted_coverage={summary['weighted_coverage_ratio']:.4f} "
+            f"path_after_2opt={summary['path_cost_after_2opt']:.4f} "
+            f"score={summary['checkpoint_score']:.4f}"
+        )
+
+    if best_rows is None or best_summary is None or best_model_path is None:
+        raise RuntimeError("No checkpoint was evaluated.")
+
+    best_summary["checkpoint_selected"] = True
+    if args.best_model_output:
+        args.best_model_output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(best_model_path, args.best_model_output)
+        best_summary["best_model_output"] = str(args.best_model_output)
+    if args.best_output_csv:
+        write_selected_viewpoints_csv(args.best_output_csv, best_rows)
+        best_summary["best_output_csv"] = str(args.best_output_csv)
+    if args.best_output_json:
+        best_summary["best_output_json"] = str(args.best_output_json)
+        write_summary_json(args.best_output_json, best_summary)
+
+    if args.checkpoint_index_csv:
+        for summary in summaries:
+            summary["checkpoint_selected"] = int(summary["checkpoint_timesteps"]) == int(best_summary["checkpoint_timesteps"])
+        write_checkpoint_index(args.checkpoint_index_csv, summaries)
+
+    return best_rows, best_summary
 
 
 def main() -> int:
@@ -139,9 +281,16 @@ def main() -> int:
         expert_edge_scale=args.reward_expert_edge_scale,
         expert_edge_jump_scale=args.reward_expert_edge_jump_scale,
         expert_edge_bandwidth=args.reward_expert_edge_bandwidth,
+        expert_edge_mask_window=args.expert_edge_mask_window,
+        expert_edge_mask_min_candidates=args.expert_edge_mask_min_candidates,
+        expert_edge_mask_escape_ratio=args.expert_edge_mask_escape_ratio,
+        expert_edge_mask_escape_motion_weight=args.expert_edge_mask_escape_motion_weight,
+        expert_edge_mask_escape_max_motion=args.expert_edge_mask_escape_max_motion,
+        expert_edge_mask_start_step=args.expert_edge_mask_start_step,
     )
     expert_order = load_expert_order(args.expert_route_csv, candidates)
     env = MaskablePPOViewpointEnv(candidates, point_features, config, reward_config, expert_order=expert_order)
+    eval_env = MaskablePPOViewpointEnv(candidates, point_features, config, reward_config, expert_order=expert_order)
     model = MaskablePPO(
         "MlpPolicy",
         env,
@@ -152,13 +301,22 @@ def main() -> int:
         seed=args.seed,
         verbose=1,
     )
-    model.learn(total_timesteps=args.total_timesteps)
+    selected_rows, summary = train_with_checkpoint_evaluation(
+        model,
+        env,
+        eval_env,
+        args,
+        args.expert_route_csv,
+        optimize_route=not args.no_two_opt,
+        evaluate_maskable_model=evaluate_maskable_model,
+    )
 
     args.model_output.parent.mkdir(parents=True, exist_ok=True)
     model.save(args.model_output)
 
-    selected_rows, summary = evaluate_maskable_model(model, env, optimize_route=not args.no_two_opt)
     summary["expert_route_csv"] = "" if args.expert_route_csv is None else str(args.expert_route_csv)
+    if "checkpoint_timesteps" not in summary:
+        add_checkpoint_score(summary, eval_env, int(model.num_timesteps), args.checkpoint_score_path_weight)
     write_selected_viewpoints_csv(args.output_csv, selected_rows)
     if args.output_json:
         write_summary_json(args.output_json, summary)
